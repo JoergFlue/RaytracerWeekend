@@ -12,7 +12,7 @@
 #include "camera.h"
 #include "material.h"
 
-#define drand48() (2 * (double)rand()/RAND_MAX - 1.0)
+#define drand48() (2 * (double)rand()/ RAND_MAX  - 1.0)
 #define MAX_FLOAT FLT_MAX
 
 
@@ -39,21 +39,22 @@ int main()
 {
 	int nx = 600; //resolution
 	int ny = 300;
-	int ns = 100; //number of samples
+	int ns = 9; //number of samples
 
 	srand( unsigned ( time(0) ) );
 
-	std::string filename = "c://temp//metalfuzz2.ppm";
+	std::string filename = "c://temp//dielectric4.ppm";
 
 	std::ofstream out(filename);	//std::streambuf *coutbug = std::cout.rdbuf();
 	std::cout.rdbuf(out.rdbuf());
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n"; //image header
 	
-	hitable *list[4];		// define a list with our world of 2 spheres
+	hitable *list[5];		// define a list with our world of 2 spheres
 	list[0] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.1, 0.2, 0.5)));
 	list[1] = new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
-	list[2] = new sphere(vec3(1, 0, -1), 0.5, new metal(vec3(0.8, 0.6, 0.2), 0.0));
+	list[2] = new sphere(vec3(1, 0, -1), 0.5, new metal(vec3(0.8, 0.6, 0.2), 0.3));
 	list[3] = new sphere(vec3(-1, 0, -1), 0.5, new dielectric(1.5));
+	list[4] = new sphere(vec3(-1, 0, -1), 0.45, new dielectric(1.5)); // bubble
 	hitable *world = new hitable_list(list,4);
 
 	camera cam;
