@@ -5,13 +5,8 @@
 #include "hitable.h"
 #include <random>
 
-#define drand48() (2.0 * (double)rand() / RAND_MAX - 1.0)
-/*double drand48()
-{
-	std::uniform_real_distribution<double> unif(-1, 1);
-	std::default_random_engine re;
-	return unif(re);
-}*/
+#define drand48() ((double)rand() / (double)(RAND_MAX + 0.00001))
+
 
 
 float schlick(float cosine, float ref_idx) {  // polynomial approximation for angle dependend reflection
