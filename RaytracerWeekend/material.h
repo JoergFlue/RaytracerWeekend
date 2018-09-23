@@ -19,7 +19,7 @@ float schlick(float cosine, float ref_idx) {  // polynomial approximation for an
 bool refract(const vec3& v, const vec3& n, float ni_over_nt, vec3& refracted) {
 	vec3 uv = unit_vector(v);
 	float dt = dot(uv, n);
-	float discriminant = 1.0 - ni_over_nt * ni_over_nt * (1 - dt * dt);
+	float discriminant = (float) 1.0 - ni_over_nt * ni_over_nt * (1 - dt * dt);
 	if (discriminant > 0) {
 		refracted = ni_over_nt * (uv - n * dt) - n * sqrt(discriminant);
 		return true;
@@ -52,7 +52,7 @@ class lambertian : public material {
 		lambertian(const vec3& a) : albedo(a) {}
 		virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
 			vec3 target = rec.p + rec.normal + random_in_unit_sphere();
-			scattered = ray(rec.p, target-rec.p);
+			scattered = ray(rec.p, target-rec.p, r_in.time());
 			attenuation = albedo;
 			return true;
 		}
@@ -65,7 +65,7 @@ class metal : public material {
 		metal(const vec3& a, float f) : albedo(a) { if (f < 1) fuzz = f; else fuzz = 1; }
 		virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
 			vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
-			scattered = ray(rec.p, reflected + fuzz*random_in_unit_sphere());
+			scattered = ray(rec.p, reflected + fuzz*random_in_unit_sphere(), r_in.time());
 			attenuation = albedo;
 			return (dot(scattered.direction(), rec.normal) > 0);
 		}
@@ -96,7 +96,7 @@ class dielectric : public material {
 			}
 			else {
 				outward_normal = rec.normal;
-				ni_over_nt = 1.0 / ref_idx;
+				ni_over_nt = 0.8 / ref_idx;
 				cosine = -dot(r_in.direction(), rec.normal) / r_in.direction().length();
 			}
 
@@ -104,14 +104,14 @@ class dielectric : public material {
 				reflect_prob = schlick(cosine, ref_idx);
 			}
 			else {
-				reflect_prob = 1.0;
+				reflect_prob = 0.9;
 			}
 
 			if (drand48() < reflect_prob) {
-				scattered = ray(rec.p, reflected);
+				scattered = ray(rec.p, reflected, r_in.time());
 			}
 			else {
-				scattered = ray(rec.p, refracted);
+				scattered = ray(rec.p, refracted, r_in.time());
 			}
 
 		return true;

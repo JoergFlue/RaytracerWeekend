@@ -49,10 +49,12 @@ hitable *random_scene() {
 			vec3 center(a + 0.9*drand48(), 0.2, b + 0.9*drand48());
 			if ((center - vec3(4, 0.2, 0)).length() > 0) {  //visible?
 				if (choose_mat < 0.8) { // diffuse
-					list[i++] = new sphere(center, 0.2, new lambertian(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48())));
+					list[i++] = new moving_sphere(center, center+vec3(0,0.5*drand48(), 0), 0.0, 1.0, 0.2,
+						new lambertian(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48())));
 				}
 				else if (choose_mat < 0.95) { // metal
-					list[i++] = new sphere(center, 0.2, new metal(vec3(0.5*(1 + drand48()), 0.5*(1 + drand48()), 0.5*(1 + drand48())), 0.25*(1 + drand48())));
+					list[i++] = new sphere(center, 0.2,
+						new metal(vec3(0.5*(1 + drand48()), 0.5*(1 + drand48()), 0.5*(1 + drand48())), 0.25*(1 + drand48())));
 				}
 				else {
 					list[i++] = new sphere(center, 0.2, new dielectric(1.5));
@@ -72,11 +74,11 @@ int main()
 {
 	int nx = 600; //resolution
 	int ny = 300;
-	int ns = 9; //number of samples
+	int ns = 100; //number of samples
 
 	srand( unsigned ( time(0) ) );
 
-	std::string filename = "c://temp//ch12.ppm";
+	std::string filename = "c://temp//B2ch01.ppm";
 
 	std::ofstream out(filename);	//std::streambuf *coutbug = std::cout.rdbuf();
 	std::cout.rdbuf(out.rdbuf());
@@ -89,8 +91,9 @@ int main()
 	vec3 lookfrom(13, 2, 3);
 	vec3 lookat(0, 0, 0);
 	float dist_to_focus = 10.0; // (lookfrom - lookat).length();
-	float aperture = 0.1;
-	camera cam(lookfrom, lookat, vec3(0,1,0), 20, float(nx)/float(ny), aperture, dist_to_focus);
+	float aperture = 0.0;
+
+	camera cam(lookfrom, lookat, vec3(0,1,0), 20, float(nx)/float(ny), aperture, dist_to_focus, 0.0, 1.0);
 
 	for (int j = ny-1; j>=0; j--) {   //step through filmback by resolution
 		for (int i = 0; i < nx; i++) {
