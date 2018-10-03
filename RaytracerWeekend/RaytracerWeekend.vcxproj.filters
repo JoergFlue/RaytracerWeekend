@@ -39,6 +39,21 @@
     <ClInclude Include="material.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="aabb.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image_write.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bvh.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="movingsphere.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

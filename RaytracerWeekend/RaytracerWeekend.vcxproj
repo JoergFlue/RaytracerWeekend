@@ -115,13 +115,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="aabb.h" />
+    <ClInclude Include="bvh.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="hitable.h" />
     <ClInclude Include="hitablelist.h" />
     <ClInclude Include="material.h" />
+    <ClInclude Include="movingsphere.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="stb_image_write.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>

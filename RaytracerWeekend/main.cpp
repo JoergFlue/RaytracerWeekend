@@ -9,6 +9,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+#include "movingsphere.h"
 #include "sphere.h"
 #include "hitablelist.h"
 #include "float.h"
@@ -72,13 +73,13 @@ hitable *random_scene() {
 
 int main()
 {
-	int nx = 600; //resolution
-	int ny = 300;
+	int nx = 1600; //resolution
+	int ny = 800;
 	int ns = 100; //number of samples
 
 	srand( unsigned ( time(0) ) );
 
-	std::string filename = "c://temp//B2ch01.ppm";
+	std::string filename = "c://temp//B2ch02.ppm";
 
 	std::ofstream out(filename);	//std::streambuf *coutbug = std::cout.rdbuf();
 	std::cout.rdbuf(out.rdbuf());
