@@ -15,6 +15,7 @@
 #include "float.h"
 #include "camera.h"
 #include "material.h"
+#include "texture.h"
 
 #define drand48() ((double)rand() / (double)(RAND_MAX + 0.00001))
 #define MAX_FLOAT FLT_MAX
@@ -42,7 +43,8 @@ vec3 color(const ray& r, hitable *world, int depth) {
 hitable *random_scene() {
 	int n = 500;
 	hitable**list = new hitable*[n + 1];
-	list[0] = new sphere(vec3(0, -10000, 0), 10000, new lambertian(vec3(0.5, 0.5, 0.5)));
+	texture *checker = new checker_texture(new constant_texture(vec3(0.2, 0.3, 0.1)), new constant_texture(vec3(0.9, 0.9, 0.9)));
+	list[0] = new sphere(vec3(0, -1000, 0), 1000, new lambertian(checker));
 	int i = 1;
 	for (int a = -11; a < 11; a++) {
 		for (int b = -11; b < 11; b++) {
@@ -51,11 +53,11 @@ hitable *random_scene() {
 			if ((center - vec3(4, 0.2, 0)).length() > 0) {  //visible?
 				if (choose_mat < 0.8) { // diffuse
 					list[i++] = new moving_sphere(center, center+vec3(0,0.5*drand48(), 0), 0.0, 1.0, 0.2,
-						new lambertian(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48())));
+						new lambertian(new constant_texture(vec3(drand48()*drand48(), drand48()*drand48(), drand48()*drand48()))));
 				}
 				else if (choose_mat < 0.95) { // metal
 					list[i++] = new sphere(center, 0.2,
-						new metal(vec3(0.5*(1 + drand48()), 0.5*(1 + drand48()), 0.5*(1 + drand48())), 0.25*(1 + drand48())));
+						new metal(new constant_texture( vec3(0.5*(1 + drand48()), 0.5*(1 + drand48()), 0.5*(1 + drand48())) ), 0.25*(1 + drand48()) ));
 				}
 				else {
 					list[i++] = new sphere(center, 0.2, new dielectric(1.5));
@@ -63,9 +65,9 @@ hitable *random_scene() {
 			}
 		}
 	}
-	list[i++] = new sphere(vec3(0, 1, 0), 1.0, new dielectric(1.5));
-	list[i++] = new sphere(vec3(-4, 1, 0), 1.0, new lambertian(vec3(0.4, 0.2, 0.1)));
-	list[i++] = new sphere(vec3(4, 1, 0), 1.0, new metal(vec3(0.7, 0.6, 0.5), 0.0));
+	list[i++] = new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5));
+	list[i++] = new sphere( vec3(-4, 1, 0), 1.0, new lambertian(new constant_texture(vec3(0.4, 0.2, 0.1))       ));
+	list[i++] = new sphere( vec3(4, 1, 0), 1.0,  new metal     (new constant_texture(vec3(0.7, 0.6, 0.5)), 0.0) );
 
 	return new hitable_list(list, i);
 }
@@ -73,13 +75,21 @@ hitable *random_scene() {
 
 int main()
 {
-	int nx = 1600; //resolution
-	int ny = 800;
-	int ns = 100; //number of samples
+	int nx = 600; //resolution
+	int ny = 300;
+	int ns = 10; //number of samples
+
+	bool hi_res = false;
+
+	if (hi_res) {
+		nx = 1600; //resolution
+		ny = 800;
+		ns = 100; //number of samples
+	}
 
 	srand( unsigned ( time(0) ) );
 
-	std::string filename = "c://temp//B2ch02.ppm";
+	std::string filename = "c://temp//B2ch03.ppm";
 
 	std::ofstream out(filename);	//std::streambuf *coutbug = std::cout.rdbuf();
 	std::cout.rdbuf(out.rdbuf());
