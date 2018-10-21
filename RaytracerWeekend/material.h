@@ -6,10 +6,7 @@
 #include "material.h"
 #include "texture.h"
 
-#include <random>
-
-#define drand48() ((double)rand() / (double)(RAND_MAX + 0.00001))
-
+#define drand48() erand48(1)
 
 
 float schlick(float cosine, float ref_idx) {  // polynomial approximation for angle dependend reflection

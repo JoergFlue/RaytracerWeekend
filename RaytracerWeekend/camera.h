@@ -6,7 +6,13 @@
 
 #include "ray.h"
 
-#define drand48() ((double)rand() / (double)(RAND_MAX + 0.00001))
+#include <random>
+#define drand48() erand48(1)
+std::default_random_engine generator;
+std::uniform_real_distribution<double> distr(0.0, 1.0);
+double erand48(int X) {
+	return distr(generator);
+}
 
 vec3 random_in_unit_disk() {
 	vec3 p;

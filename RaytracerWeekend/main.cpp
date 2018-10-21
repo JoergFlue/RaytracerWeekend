@@ -17,7 +17,9 @@
 #include "material.h"
 #include "texture.h"
 
-#define drand48() ((double)rand() / (double)(RAND_MAX + 0.00001))
+
+#define drand48() erand48(1)
+
 #define MAX_FLOAT FLT_MAX
 
 
@@ -45,7 +47,7 @@ hitable *random_scene() {
 	hitable**list = new hitable*[n + 1];
 	texture *checker = new checker_texture(new constant_texture(vec3(0.05, 0.05, 0.1)), new constant_texture(vec3(0.95, 0.95, 0.95)));
 	texture *pertext = new noise_texture(4);
-	list[0] = new sphere(vec3(0, -1000, 0), 1000, new lambertian(checker));
+	list[0] = new sphere(vec3(0, -1000, 0), 1000, new lambertian(pertext));
  	int i = 1;
 /*	for (int a = -11; a < 11; a++) {
 		for (int b = -11; b < 11; b++) {
@@ -67,7 +69,7 @@ hitable *random_scene() {
 		}
 	}*/
 //	list[i++] = new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5));
-	list[i++] = new sphere( vec3(-4, 1, 0), 4.0, new lambertian( pertext ) );
+	list[i++] = new sphere( vec3(0, 1, 0), 4.0, new lambertian( pertext ) );
 //	list[i++] = new sphere( vec3(-4, 1, 0), 1.0,  new metal (new constant_texture(vec3(0.7, 0.6, 0.5)), 0.0) );
 
 	return new hitable_list(list, i);
@@ -90,7 +92,7 @@ int main()
 
 	srand( unsigned ( time(0) ) );
 
-	std::string filename = "c://temp//B2ch04perlin.ppm";
+	std::string filename = "c://temp//B2ch04perlin2.ppm";
 
 	std::ofstream out(filename);	//std::streambuf *coutbug = std::cout.rdbuf();
 	std::cout.rdbuf(out.rdbuf());
