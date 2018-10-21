@@ -43,10 +43,11 @@ vec3 color(const ray& r, hitable *world, int depth) {
 hitable *random_scene() {
 	int n = 500;
 	hitable**list = new hitable*[n + 1];
-	texture *checker = new checker_texture(new constant_texture(vec3(0.2, 0.3, 0.1)), new constant_texture(vec3(0.9, 0.9, 0.9)));
+	texture *checker = new checker_texture(new constant_texture(vec3(0.05, 0.05, 0.1)), new constant_texture(vec3(0.95, 0.95, 0.95)));
+	texture *pertext = new noise_texture(4);
 	list[0] = new sphere(vec3(0, -1000, 0), 1000, new lambertian(checker));
-	int i = 1;
-	for (int a = -11; a < 11; a++) {
+ 	int i = 1;
+/*	for (int a = -11; a < 11; a++) {
 		for (int b = -11; b < 11; b++) {
 			float choose_mat = drand48();
 			vec3 center(a + 0.9*drand48(), 0.2, b + 0.9*drand48());
@@ -64,10 +65,10 @@ hitable *random_scene() {
 				}
 			}
 		}
-	}
-	list[i++] = new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5));
-	list[i++] = new sphere( vec3(-4, 1, 0), 1.0, new lambertian(new constant_texture(vec3(0.4, 0.2, 0.1))       ));
-	list[i++] = new sphere( vec3(4, 1, 0), 1.0,  new metal     (new constant_texture(vec3(0.7, 0.6, 0.5)), 0.0) );
+	}*/
+//	list[i++] = new sphere( vec3(0, 1, 0), 1.0, new dielectric(1.5));
+	list[i++] = new sphere( vec3(-4, 1, 0), 4.0, new lambertian( pertext ) );
+//	list[i++] = new sphere( vec3(-4, 1, 0), 1.0,  new metal (new constant_texture(vec3(0.7, 0.6, 0.5)), 0.0) );
 
 	return new hitable_list(list, i);
 }
@@ -75,9 +76,9 @@ hitable *random_scene() {
 
 int main()
 {
-	int nx = 600; //resolution
-	int ny = 300;
-	int ns = 10; //number of samples
+	int nx = 800; //resolution
+	int ny = 400;
+	int ns = 1; //number of samples
 
 	bool hi_res = false;
 
@@ -89,7 +90,7 @@ int main()
 
 	srand( unsigned ( time(0) ) );
 
-	std::string filename = "c://temp//B2ch03.ppm";
+	std::string filename = "c://temp//B2ch04perlin.ppm";
 
 	std::ofstream out(filename);	//std::streambuf *coutbug = std::cout.rdbuf();
 	std::cout.rdbuf(out.rdbuf());
@@ -105,6 +106,8 @@ int main()
 	float aperture = 0.0;
 
 	camera cam(lookfrom, lookat, vec3(0,1,0), 20, float(nx)/float(ny), aperture, dist_to_focus, 0.0, 1.0);
+
+	int counter = 0;
 
 	for (int j = ny-1; j>=0; j--) {   //step through filmback by resolution
 		for (int i = 0; i < nx; i++) {
@@ -123,6 +126,7 @@ int main()
 			int ig = int(255.99*col[1]);
 			int ib = int(255.99*col[2]);
 			std::cout << ir << " " << ig << " " << ib <<"\n";
+			counter++;
 		}
 	}
 }
